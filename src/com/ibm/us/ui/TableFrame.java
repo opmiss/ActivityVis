@@ -59,6 +59,7 @@ public class TableFrame extends JInternalFrame {
 		this.setLayout(new GridBagLayout()); 
 		this.window = w; 
 		this.user_list = ul;
+		System.out.println(ul.size()); 
 		userTableModel = new MyTableModel(user_list);
 		selected = user_list.get(0); 
 		sessionTableModel = new MyTableModel(selected); 

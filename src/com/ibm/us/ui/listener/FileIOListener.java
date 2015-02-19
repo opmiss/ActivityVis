@@ -61,6 +61,7 @@ public class FileIOListener extends JPanel implements ActionListener {
 				long t2 = System.currentTimeMillis(); 
 				System.out.println("process time: "+(t2-t1)); 
 				if (!u.isEmpty()) users.add(u);
+				System.out.println(users.size()); 
 			}
 		}else{
 			User u = (new User()).loadFile(file).merge().sort().summarize();

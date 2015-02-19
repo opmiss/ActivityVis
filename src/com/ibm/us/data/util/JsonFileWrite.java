@@ -1,7 +1,9 @@
 package com.ibm.us.data.util;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,18 +16,18 @@ public class JsonFileWrite {
 	public static JSONObject toJson(User u){
 		JSONObject u_obj = new JSONObject();
 		u_obj.put("id", u.UserID);
-		u_obj.put("start", sdf.format(u.start.getTime()));
-		u_obj.put("end", sdf.format(u.end.getTime())); 
+		u_obj.put("start", sdf.format(u.start));
+		u_obj.put("end", sdf.format(u.end)); 
 		JSONArray threads = new JSONArray(); 
 		for (Ethread t:u.threads){
 			JSONObject t_obj = new JSONObject(); 
 			t_obj.put("id", t.ThreadID); 
-			t_obj.put("start", sdf.format(t.start.getTime()));
-			t_obj.put("end", sdf.format(t.end.getTime()));
+			t_obj.put("start", sdf.format(t.start));
+			t_obj.put("end", sdf.format(t.end));
 			JSONArray emails = new JSONArray(); 
 			for (Record r:t.records){
 				JSONObject r_obj = new JSONObject(); 
-				r_obj.put("time", sdf.format(r.time.getTime())); 
+				r_obj.put("time", sdf.format(r.time));
 				r_obj.put("attachments", r.attach);
 				r_obj.put("normal", Boolean.toString(r.isNormal())); 
 				JSONArray members = new JSONArray(); 

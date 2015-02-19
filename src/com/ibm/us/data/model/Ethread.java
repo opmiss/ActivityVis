@@ -9,17 +9,14 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
+import org.joda.time.*; 
 
 import com.ibm.us.vis.geo.vec;
 
 public class Ethread implements Comparable{
 	
-	public Calendar start; 
-	public Calendar end; 
+	public long start; 
+	public long end; 
 	public Long size;
 	public Integer num_emails, num_attachs; 
 	public ArrayList<Record> records = null; 
@@ -28,8 +25,8 @@ public class Ethread implements Comparable{
 	public boolean mask = true; //use for merge sessions
 	
 	public Ethread(Record r){
-		start = (Calendar) r.time.clone(); 
-		end = (Calendar) r.time.clone(); 
+		start = r.time; 
+		end = r.time; 
 		records = new ArrayList<Record>(); 
 		records.add(r); 
 		members = new HashSet<String>();
@@ -47,8 +44,8 @@ public class Ethread implements Comparable{
 	public void print(){
 		System.out.println("----------"); 
 		System.out.println("number of records: "+records.size()); 
-		System.out.println("start: "+start.getTime().toString()); 
-		System.out.println("end: "+end.getTime().toString()); 
+		System.out.println("start: "+start); 
+		System.out.println("end: "+end); 
 		for (String s:members) System.out.print(s+" ");
 		System.out.println(); 
 	}
@@ -69,15 +66,15 @@ public class Ethread implements Comparable{
 	}
 	
 	public long getDuration(){
-		return (end.getTimeInMillis()-start.getTimeInMillis()); 
+		return end-start; 
 	}
 	
 	public Object[] digest(){
-		DateTime s = toDateTime(start); 
-		DateTime e = toDateTime(end); 
+		DateTime s = new DateTime(start); 
+		DateTime e = new DateTime(end); 
 		Period p = new Period(s, e); 
 		Object[] data = new Object[5];
-		data[0] = start.getTime().toString(); 
+		data[0] = start; 
 		data[1] = User.YearsMonthsDaysHours.print(p);  
 		data[2] = members.size(); 
 		data[3] = num_emails; 
@@ -93,16 +90,15 @@ public class Ethread implements Comparable{
 		data[7] = num_attachs; */
 		return data; 
 	}		
-	private DateTime toDateTime(Calendar C){
-		return new DateTime(C.getTimeInMillis()); 
-	}
 	public Ethread sort(){
 		Collections.sort(records); 
 		return this; 
 	}
 	public int compareTo(Object o) {
 		Ethread s = (Ethread)o; 
-		return this.start.compareTo(s.start); 
+		if (this.start>s.start) return 1; 
+		else if (this.start<s.start) return -1; 
+		return 0; 
 	}
 	public static boolean similar(Ethread s1, Ethread s2){
 		int num =0; 
@@ -121,8 +117,8 @@ public class Ethread implements Comparable{
 		return new vec((float)num/(float)s1.members.size(), (float)num/(float)s2.members.size() ); 
 	}
 	public void merge(Ethread s){
-		if (this.start.compareTo(s.start) > 0) this.start = s.start; 
-		if (this.end.compareTo(s.end) < 0 ) this.end = s.end; 
+		start = (start<s.start)?start:s.start; 
+		end = (end>s.end)?end:s.end; 
 		this.members.addAll(s.members); 
 		this.records.addAll(s.records); 
 		this.num_attachs += s.num_attachs; 

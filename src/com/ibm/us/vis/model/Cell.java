@@ -265,8 +265,6 @@ public class Cell {
 	public Cell layoutCiliums(){
 		//fill an array of times 
 		float[] time = new float[ciliums.size()];
-		 
-		
 		Calendar cal = Calendar.getInstance();
 	    try {
 			cal.setTime(Record.sdf.parse("2010-01-01 00:00:00"));
@@ -276,7 +274,7 @@ public class Cell {
 		}
 	    int k=0;
 		for(Cilium c:ciliums){
-			time[k]=(float)(c.thread.start.getTimeInMillis() - cal.getTimeInMillis())/(float)31556926000L; 
+			time[k]=(float)(c.thread.start - cal.getTimeInMillis())/(float)31556926000L; 
 			System.out.println("time "+k+": "+time[k]); 
 			k++; 
 		}

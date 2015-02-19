@@ -19,8 +19,8 @@ import org.joda.time.format.PeriodFormatterBuilder;
 public class User {
 	public String UserID; 
 	public String Name; 
-	public Calendar start; //start time of monitoring
-	public Calendar end;  //end time of monitoring 
+	public long start; //start time of monitoring
+	public long end;  //end time of monitoring 
 	public ArrayList<Ethread> threads = null;
 	public ArrayList<Record> records = null;
 	public Set<String> contacts = null;
@@ -116,12 +116,13 @@ public class User {
 		for (Ethread s:threads){
 			s.sort().setID(Integer.toString(id)); 
 			id++; 
+			
 		}
 		return this;
 	}
 	
 	public void printTime(){
-		System.out.println("start: "+start.getTime().toString()+", "+"end: "+end.getTime().toString());
+		System.out.println("start: "+start+", "+"end: "+end);
 	}
 	
 	public User merge(){
@@ -170,7 +171,7 @@ public class User {
 		return list; 
 	}
 	
-	private User setSessions(ArrayList<Record> records){
+	private User setThreads(ArrayList<Record> records){
 		threads = new ArrayList<Ethread>(); 
 		for (Record r:records){
 			threads.add(new Ethread(r)); 
@@ -194,7 +195,7 @@ public class User {
 		UserID = parts[0]; 
 		try {
 			br = new BufferedReader(new FileReader(file));
-			ArrayList<Record> records = new ArrayList<Record>(); 
+			this.records = new ArrayList<Record>(); 
 			while ((line = br.readLine()) != null) {
 				if (Name == null){
 					String[] lines = line.split(","); 
@@ -203,15 +204,13 @@ public class User {
 				Record r = new Record(line); 
 				records.add(r); 
 			}
-			this.records=records; 
-			this.setSessions(User.filterRecords(records)); 
+			this.records=User.filterRecords(records); 
+			this.setThreads(this.records); 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace(); 
-		} catch(ParseException e){
-			e.printStackTrace(); 
-		}
+		} 
 		finally{
 			if (br!=null) {
 				try {
@@ -234,8 +233,8 @@ public class User {
 		User yx = (new User("AAC0070")).loadFile().merge().sort().summarize(); 
 		yx.print();
 		yx.printTime(); 
-		DateTime sdt = User.toDateTime(yx.start);
-		DateTime edt = User.toDateTime(yx.end);
+		DateTime sdt = new DateTime(yx.start);
+		DateTime edt = new DateTime(yx.end);
 		System.out.println(sdt.getDayOfWeek()+", "+sdt.getDayOfMonth()+", "+sdt.getDayOfYear()); 
 		System.out.println(edt.getDayOfWeek()+", "+edt.getDayOfMonth()+", "+edt.getDayOfYear()); 
 		Period p = new Period(sdt, edt); 

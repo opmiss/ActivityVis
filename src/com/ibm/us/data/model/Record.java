@@ -9,40 +9,55 @@ import java.util.List;
 
 public class Record implements Comparable{
 	
-	public Calendar time; 
+	public long time; 
 	public List<String> to; 
 	public long size; 
 	public int attach; 
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public String line; 
 	
-	private void set(Calendar d, String t, int s, int a){
-		time = (Calendar)d.clone(); 
+	private void set(String d, String t, int s, int a){
+		try {
+			time = sdf.parse(d).getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		to = Arrays.asList(t.split(";"));  
 		size = s; attach = a; 
 	}
 	
 	public boolean isNormal(){
-		int hour = time.get(Calendar.HOUR_OF_DAY); 
+		Calendar cal = Calendar.getInstance(); 
+		cal.setTimeInMillis(time);
+		int hour = cal.get(Calendar.HOUR_OF_DAY); 
 		if (hour <7 || hour > 20) return false; 
 		else return true; 
 	}
 	
-	public Record(String line) throws ParseException{
+	public Record(String line) {
 		String[] fields = line.split(",");
-		String ts = fields[1]; 
-		Calendar cal = Calendar.getInstance();
-	    cal.setTime(sdf.parse(ts));
-		String t = fields[3];
-		int s = Integer.parseInt(fields[8]); 
-		int a = Integer.parseInt(fields[9]); 
-		set(cal, t, s, a); 
+		String ts = fields[1].replace("\"", ""); 
+		String t = fields[3].replace("\"", "");
+		int s, a; 
+		if (fields[7].isEmpty()){
+			s = Integer.parseInt(fields[8].replace("\"", "")); 
+			a = Integer.parseInt(fields[9].replace("\"", "")); 
+		}
+		else{
+			s = Integer.parseInt(fields[7].replace("\"", "")); 
+			a = Integer.parseInt(fields[8].replace("\"", "")); 
+		}
+		set(ts, t, s, a); 
 		this.line = line; 
 	}
 
 	@Override
 	public int compareTo(Object arg0) {
 		Record r = (Record) arg0;
-		return time.compareTo(r.time); 
+		if (this.time>r.time) return 1; 
+		else if (this.time<r.time) return -1; 
+		return 0; 
 	}
+
 }

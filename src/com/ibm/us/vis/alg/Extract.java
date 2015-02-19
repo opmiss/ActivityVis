@@ -66,13 +66,14 @@ public class Extract {
 		int[] Y = new int[12]; for (int i=0; i<12; i++) Y[i]=0; 
 		int[] M = new int[31];  for (int i=0; i<31; i++) M[i]=0; 
 		int[] D = new int[24];  for (int i=0; i<24; i++) D[i]=0; 
+		Calendar c = Calendar.getInstance(); 
 		for (User u : users) {
 			if (u.records != null) {
 				for (Record r : u.records) {
-					// System.out.println(Record.sdf.format(r.time.getTime()));
-					int y = r.time.get(Calendar.MONTH);
-					int m = r.time.get(Calendar.DAY_OF_MONTH)-1;
-					int d = r.time.get(Calendar.HOUR_OF_DAY);
+					c.setTimeInMillis(r.time);
+					int y = c.get(Calendar.MONTH);
+					int m = c.get(Calendar.DAY_OF_MONTH)-1;
+					int d = c.get(Calendar.HOUR_OF_DAY);
 					// System.out.println(y+","+m+","+d);
 					Y[y]++;
 					M[m]++;
@@ -106,10 +107,12 @@ public class Extract {
 	}
 	
 	public static void extractYMWD(User user){
+		Calendar c = Calendar.getInstance(); 
 		for (Record r : user.records) {
-			int y = r.time.get(Calendar.MONTH); Y[y]++;
-			int m = r.time.get(Calendar.DAY_OF_MONTH)-1; M[m]++;
-			int w = r.time.get(Calendar.DAY_OF_WEEK); 
+			c.setTimeInMillis(r.time);
+			int y = c.get(Calendar.MONTH); Y[y]++;
+			int m = c.get(Calendar.DAY_OF_MONTH)-1; M[m]++;
+			int w = c.get(Calendar.DAY_OF_WEEK); 
 			if (w == Calendar.MONDAY) W[0]++; 
 			if (w == Calendar.TUESDAY) W[1]++; 
 			if (w == Calendar.WEDNESDAY) W[2]++; 
@@ -117,7 +120,7 @@ public class Extract {
 			if (w == Calendar.FRIDAY) W[4]++; 
 			if (w == Calendar.SATURDAY) W[5]++; 
 			if (w == Calendar.SUNDAY) W[6]++; 
-			int d = r.time.get(Calendar.HOUR_OF_DAY); D[d]++;
+			int d = c.get(Calendar.HOUR_OF_DAY); D[d]++;
 		}
 	}
 	

@@ -72,8 +72,8 @@ public class Merging {
 	
 	public static boolean can_merge(Ethread a, Ethread b){ 
 		if (!b.mask) return false;
-		DateTime s = User.toDateTime(a.start); 
-		DateTime e = User.toDateTime(b.end); 
+		DateTime s = new DateTime(a.start); 
+		DateTime e = new DateTime(b.end); 
 		Period p = new Period(s, e); 
 		if (p.getYears() >= 1) return false; 
 		return true; 
@@ -81,8 +81,8 @@ public class Merging {
 	
 	public static boolean mergable(Ethread a, Ethread b){ 
 		if (!a.mask || !b.mask) return false;
-		DateTime s = User.toDateTime(a.start); 
-		DateTime e = User.toDateTime(b.end); 
+		DateTime s = new DateTime(a.start); 
+		DateTime e = new DateTime(b.end); 
 		Period p = new Period(s, e); 
 		if (p.getYears() >= 1) return false; 
 		boolean c = Ethread.similar(a, b); 
