@@ -204,7 +204,7 @@ public class User {
 				Record r = new Record(line); 
 				records.add(r); 
 			}
-			this.records=User.filterRecords(records); 
+		//	this.records=User.filterRecords(records); 
 			this.setThreads(this.records); 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
